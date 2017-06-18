@@ -1,8 +1,10 @@
 package com.emprendesoft.easyservice.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.emprendesoft.easyservice.R;
+import com.emprendesoft.easyservice.activity.TableDetailActivity;
 import com.emprendesoft.easyservice.model.Table;
 
 import java.util.LinkedList;
@@ -37,7 +40,7 @@ public class TableListFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_table_list, container, false);
 
         // create ListView
-        ListView list = (ListView) root.findViewById(R.id.list_tables);
+        final ListView list = (ListView) root.findViewById(R.id.list_tables);
 
         // Adapter with table list
         ArrayAdapter<Table> adapter = new ArrayAdapter<Table>(
@@ -55,13 +58,9 @@ public class TableListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-//                // Avisamos al listener, si lo tenemos, que el usuario ha seleccionado una ciudad
-//                if (mOnCitySelectedListener != null) {
-//
-//                    City selectedCity = mCities.get(position);
-//                    // Aviso al listener
-//                    mOnCitySelectedListener.onCitySelected(selectedCity, position);
-//                }
+                Intent intent = new Intent(getActivity(), TableDetailActivity.class);
+                intent.putExtra("TableName", list.getItemAtPosition(position).toString());
+                startActivity(intent);
             }
         });
 

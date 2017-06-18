@@ -12,12 +12,12 @@
 
         <!-- Activities -->
         <activity android:name=".activity.TableListActivity">
-        </activity>
-        <activity android:name=".activity.TableDetailActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+        <activity android:name=".activity.TableDetailActivity">
         </activity>
     </application>
 
