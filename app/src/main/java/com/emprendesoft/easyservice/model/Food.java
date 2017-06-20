@@ -3,25 +3,50 @@ package com.emprendesoft.easyservice.model;
 public class Food {
 
     private String name;
-    private int imageId;
+    private String imagenURL;
     private float price;
+    // milk, egg, fish, crustaceans, nuts, peanut, wheat
     private String[] allergens;
-//    private List<String> mGrapes = new LinkedList<>();
     private String note;
 
-    public Food(String name, int imageId, float price, String[] allergens) {
+    public Food(String name, String imagenURL, float price, String[] allergens) {
         this.name = name;
-        this.imageId = imageId;
+        this.imagenURL = imagenURL;
         this.price = price;
         this.allergens = allergens;
+    }
+
+    public Food setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public Food setImagenURL(String imagenURL) {
+        this.imagenURL = imagenURL;
+        return this;
+    }
+
+    public Food setPrice(float price) {
+        this.price = price;
+        return this;
+    }
+
+    public Food setAllergens(String[] allergens) {
+        this.allergens = allergens;
+        return this;
+    }
+
+    public Food setNote(String note) {
+        this.note = note;
+        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public int getImageId() {
-        return imageId;
+    public String getImagenURL() {
+        return imagenURL;
     }
 
     public float getPrice() {
