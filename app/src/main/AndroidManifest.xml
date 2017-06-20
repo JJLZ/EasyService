@@ -14,10 +14,13 @@
         <activity android:name=".activity.TableListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity android:name=".activity.TableDetailActivity">
+        </activity>
+        <activity android:name=".activity.MenuActivity">
         </activity>
     </application>
 

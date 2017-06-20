@@ -6,6 +6,7 @@ public class Food {
     private int imageId;
     private float price;
     private String[] allergens;
+//    private List<String> mGrapes = new LinkedList<>();
     private String note;
 
     public Food(String name, int imageId, float price, String[] allergens) {

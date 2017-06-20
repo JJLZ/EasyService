@@ -1,5 +1,6 @@
 package com.emprendesoft.easyservice.fragment;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -10,7 +11,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +21,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.emprendesoft.easyservice.R;
+import com.emprendesoft.easyservice.activity.MenuActivity;
 
 public class TableDetailFragment extends Fragment {
 
@@ -74,7 +75,11 @@ public class TableDetailFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("Debug", "Click is workign");
+
+                //-- Open Menu Activity --
+                Intent intent = new Intent(getActivity(), MenuActivity.class);
+                startActivity(intent);
+                //--
             }
         });
         //--
