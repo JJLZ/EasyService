@@ -58,7 +58,15 @@ public class TableListFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Intent intent = new Intent(getActivity(), TableDetailActivity.class);
-                intent.putExtra(TableDetailActivity.EXTRA_TABLE, list.getItemAtPosition(position).toString());
+
+                //-- Sent selected table --
+                Table table = mTables.get(position);
+
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(TableDetailActivity.EXTRA_TABLE, table);
+                intent.putExtras(bundle);
+                //--
+
                 startActivity(intent);
             }
         });

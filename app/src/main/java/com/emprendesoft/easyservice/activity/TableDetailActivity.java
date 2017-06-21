@@ -5,11 +5,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import com.emprendesoft.easyservice.fragment.TableDetailFragment;
+import com.emprendesoft.easyservice.model.Table;
 
 public class TableDetailActivity extends FragmentContainerActivity {
 
     public static final String EXTRA_TABLE = "com.emprendesoft.easyservice.TableDetailActivity.EXTRA_TABLE";
-    private String strMesaNumber = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -22,20 +22,20 @@ public class TableDetailActivity extends FragmentContainerActivity {
 
         TableDetailFragment fragment = new TableDetailFragment();
 
-        //-- Sending arguments with table number --
+        //-- Sending arguments with selected table --
+        Table table = null;
 
         // Get table number from the Intent
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            strMesaNumber = extras.getString(EXTRA_TABLE);
+        Bundle bundleExtras = getIntent().getExtras();
+        if (bundleExtras != null) {
+            table = (Table) bundleExtras.getSerializable(EXTRA_TABLE);
+
+            // Sent table as argument to the fragment
+            Bundle bundleArg = new Bundle();
+            bundleArg.putSerializable(TableDetailFragment.ARG_TABLE, table);
+            fragment.setArguments(bundleArg);
+            //--
         }
-
-        // Sent table number as argument to the fragment
-        Bundle bundle = new Bundle();
-        bundle.putString(TableDetailFragment.ARG_TABLE, strMesaNumber);
-        fragment.setArguments(bundle);
-
-        //--
 
         return fragment;
     }

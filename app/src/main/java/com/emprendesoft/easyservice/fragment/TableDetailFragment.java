@@ -22,15 +22,16 @@ import android.widget.TextView;
 
 import com.emprendesoft.easyservice.R;
 import com.emprendesoft.easyservice.activity.MenuActivity;
+import com.emprendesoft.easyservice.model.Food;
+import com.emprendesoft.easyservice.model.Table;
 
 public class TableDetailFragment extends Fragment {
 
-    private ActionBar mActionBar = null;
     public static final String ARG_TABLE = "com.emprendesoft.easyservice.TableDetailFragment.ARG_TABLE";
 
-    int[] IMAGES = {R.drawable.enchiladas_suizas, R.drawable.pozole, R.drawable.mole_poblano};
-    String[] NAMES = {"Enchiladas Suizas", "Pozole", "Mole Poblano" };
-    String[] DESCRIPTIONS = {"Vamos a ver si aparece la imagen", "Mi comida favorita", "Muy rico"};
+    private ActionBar mActionBar = null;
+    private Table mTable = null;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,9 +52,13 @@ public class TableDetailFragment extends Fragment {
         mActionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
         TextView txtTitle = (TextView) getActivity().findViewById(R.id.toolbar_title);
 
+        mActionBar.setTitle("Platos");
+
+        //-- Get Table from Argument --
         if (getArguments() != null) {
-            mActionBar.setTitle("Platos");
-            txtTitle.setText(getArguments().getString(ARG_TABLE));
+            mTable = (Table) getArguments().getSerializable(ARG_TABLE);
+
+            txtTitle.setText(mTable.toString());
         }
 
         // Enable back button
@@ -107,7 +112,7 @@ public class TableDetailFragment extends Fragment {
         @Override
         public int getCount() {
 
-            return IMAGES.length;
+            return mTable.getFood().size();
         }
 
         @Override
@@ -130,9 +135,11 @@ public class TableDetailFragment extends Fragment {
             TextView textView_name = (TextView) convertView.findViewById(R.id.textView_name);
             TextView textView_description = (TextView) convertView.findViewById(R.id.textView_description);
 
-            imageView.setImageResource(IMAGES[position]);
-            textView_name.setText(NAMES[position]);
-            textView_description.setText(DESCRIPTIONS[position]);
+            Food food = (Food) mTable.getFood().get(position);
+
+//            imageView.setImageResource(IMAGES[position]);
+            textView_name.setText(food.getName());
+//            textView_description.setText(DESCRIPTIONS[position]);
 
             return convertView;
         }
