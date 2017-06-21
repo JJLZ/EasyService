@@ -82,9 +82,7 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
             }
 
             mTextViewName.setText(food.getName());
-
-            float price = food.getPrice();
-            mTextViewPrice.setText("Precio: " + Float.toString(price));
+            mTextViewPrice.setText("Precio: " + String.format("$%.2f", food.getPrice()));
 
             // Imagen using Picasso
             String imagenURL = food.getImagenURL();

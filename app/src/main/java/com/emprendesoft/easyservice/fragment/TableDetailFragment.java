@@ -24,14 +24,23 @@ import com.emprendesoft.easyservice.R;
 import com.emprendesoft.easyservice.activity.MenuActivity;
 import com.emprendesoft.easyservice.model.Food;
 import com.emprendesoft.easyservice.model.Table;
+import com.emprendesoft.easyservice.model.Tables;
+import com.squareup.picasso.Picasso;
 
 public class TableDetailFragment extends Fragment {
 
-    public static final String ARG_TABLE = "com.emprendesoft.easyservice.TableDetailFragment.ARG_TABLE";
+    public static final String ARG_TABLE_INDEX = "com.emprendesoft.easyservice.TableDetailFragment.ARG_TABLE_INDEX";
+    public static final int REQUEST_TABLE_INDEX = 1;
+
+    ListView listView = null;
+    CustomAdapter customAdapter = null;
+
+
+    private int tableIndex = 0;
+    private Table mTable = null;
+    Tables mTables = null;
 
     private ActionBar mActionBar = null;
-    private Table mTable = null;
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,9 +63,12 @@ public class TableDetailFragment extends Fragment {
 
         mActionBar.setTitle("Platos");
 
-        //-- Get Table from Argument --
+        //-- Get table index from Argument --
         if (getArguments() != null) {
-            mTable = (Table) getArguments().getSerializable(ARG_TABLE);
+
+            tableIndex = getArguments().getInt(ARG_TABLE_INDEX, 0);
+            mTables = Tables.getInstance();
+            mTable = mTables.getTable(tableIndex);
 
             txtTitle.setText(mTable.toString());
         }
@@ -70,9 +82,9 @@ public class TableDetailFragment extends Fragment {
         mActionBar.setHomeAsUpIndicator(upArrow);
         //--
 
-        ListView listView = (ListView) root.findViewById(R.id.list_table_detail);
+        listView = (ListView) root.findViewById(R.id.list_table_detail);
 
-        CustomAdapter customAdapter = new CustomAdapter();
+        customAdapter = new CustomAdapter();
         listView.setAdapter(customAdapter);
 
         //-- FloatingActionButton --
@@ -83,13 +95,21 @@ public class TableDetailFragment extends Fragment {
 
                 //-- Open Menu Activity --
                 Intent intent = new Intent(getActivity(), MenuActivity.class);
-                startActivity(intent);
+                intent.putExtra(MenuActivity.EXTRA_TABLE_INDEX, tableIndex);
+                startActivityForResult(intent, 1);
                 //--
             }
         });
         //--
 
         return root;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        customAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -112,7 +132,7 @@ public class TableDetailFragment extends Fragment {
         @Override
         public int getCount() {
 
-            return mTable.getFood().size();
+            return mTable.getOrders().size() + 1;
         }
 
         @Override
@@ -128,20 +148,44 @@ public class TableDetailFragment extends Fragment {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            convertView = getActivity().getLayoutInflater().inflate(R.layout.custom_layout_table_detail, null);
+            if (position == mTable.getOrders().size()) {
 
+                convertView = getActivity().getLayoutInflater().inflate(R.layout.custom_total_row, null);
 
-            ImageView imageView = (ImageView) convertView.findViewById(R.id.imageView);
-            TextView textView_name = (TextView) convertView.findViewById(R.id.textView_name);
-            TextView textView_description = (TextView) convertView.findViewById(R.id.textView_description);
+                TextView total = (TextView) convertView.findViewById(R.id.custom_total_row__total);
 
-            Food food = (Food) mTable.getFood().get(position);
+                float totalCheck = mTable.getCheck();
 
-//            imageView.setImageResource(IMAGES[position]);
-            textView_name.setText(food.getName());
-//            textView_description.setText(DESCRIPTIONS[position]);
+                if (totalCheck == 0f) {
+                    total.setText("No hay órdenes para esta mesa");
+                } else {
+                    total.setText("Cuenta Total: " + String.format("$%.2f", totalCheck));
+                }
+
+            } else {
+                convertView = getActivity().getLayoutInflater().inflate(R.layout.custom_layout_table_detail, null);
+
+                ImageView image = (ImageView) convertView.findViewById(R.id.custom_layout_table_detail__imageView);
+                TextView name = (TextView) convertView.findViewById(R.id.custom_layout_table_detail__name);
+                TextView note= (TextView) convertView.findViewById(R.id.custom_layout_table_detail__note);
+                TextView price = (TextView) convertView.findViewById(R.id.custom_layout_table_detail__price);
+
+                Food food = (Food) mTable.getOrders().get(position);
+
+                // Imagen using Picasso
+                String imagenURL = food.getImagenURL();
+                Picasso.with(getActivity()).
+                        load(imagenURL).
+                        placeholder(R.drawable.food_placeholder).
+                        into(image);
+
+                name.setText(food.getName());
+                price.setText(String.format("$%.2f", food.getPrice()));
+                note.setText("Aquí van las notas");
+            }
 
             return convertView;
+
         }
     }
 }

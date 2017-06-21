@@ -14,13 +14,11 @@ import android.widget.ListView;
 import com.emprendesoft.easyservice.R;
 import com.emprendesoft.easyservice.activity.TableDetailActivity;
 import com.emprendesoft.easyservice.model.Table;
-
-import java.util.LinkedList;
+import com.emprendesoft.easyservice.model.Tables;
 
 public class TableListFragment extends Fragment {
 
-    protected static LinkedList<Table> mTables;
-    private static final int numberOfTables = 10;
+    public Tables mTables = null;
 
     @Nullable
     @Override
@@ -28,12 +26,7 @@ public class TableListFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
 
         // Create table list
-        mTables = new LinkedList<>();
-
-        for (int i = 0; i < numberOfTables; i++) {
-
-            mTables.add(new Table(i + 1));
-        }
+        mTables = Tables.getInstance();
 
         // inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_table_list, container, false);
@@ -46,7 +39,7 @@ public class TableListFragment extends Fragment {
 
                 getActivity(),
                 android.R.layout.simple_list_item_1,
-                mTables
+                mTables.getTables()
         );
 
         // set the adapter to the list
@@ -58,14 +51,7 @@ public class TableListFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Intent intent = new Intent(getActivity(), TableDetailActivity.class);
-
-                //-- Sent selected table --
-                Table table = mTables.get(position);
-
-                Bundle bundle = new Bundle();
-                bundle.putSerializable(TableDetailActivity.EXTRA_TABLE, table);
-                intent.putExtras(bundle);
-                //--
+                intent.putExtra(TableDetailActivity.EXTRA_TABLE_INDEX, position);
 
                 startActivity(intent);
             }
@@ -74,3 +60,33 @@ public class TableListFragment extends Fragment {
         return root;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,6 +1,8 @@
 package com.emprendesoft.easyservice.model;
 
-public class Food {
+import java.io.Serializable;
+
+public class Food implements Serializable {
 
     private String name;
     private String imagenURL;
@@ -14,6 +16,10 @@ public class Food {
         this.imagenURL = imagenURL;
         this.price = price;
         this.allergens = allergens;
+    }
+
+    public String getNote() {
+        return note;
     }
 
     public Food setName(String name) {
