@@ -18,6 +18,7 @@ import java.util.LinkedList;
 public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerViewAdapter.ViewHolder> {
 
     private LinkedList<Food> mFoods;
+    private View.OnClickListener mOnClickListener;
 
     public MenuRecyclerViewAdapter(LinkedList<Food> foods) {
         super();
@@ -25,11 +26,18 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
         mFoods = foods;
     }
 
+    public void setOnClickListener(View.OnClickListener onClickListener) {
+
+        mOnClickListener = onClickListener;
+    }
+
     @Override
     public MenuRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         // Inflates the row layout from xml when needed
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_menu_row, parent, false);
+
+        view.setOnClickListener(mOnClickListener);
 
         return new ViewHolder(view);
     }
@@ -39,8 +47,6 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
 
         // Binds the data
         holder.setFood(mFoods.get(position));
-
-
     }
 
     @Override
@@ -128,22 +134,6 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

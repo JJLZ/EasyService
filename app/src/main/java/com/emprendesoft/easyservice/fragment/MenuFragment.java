@@ -38,7 +38,8 @@ public class MenuFragment extends Fragment {
 
         //--now Fake Data --
         LinkedList<Food> foods = new LinkedList<>();
-        foods.add(new Food("Enchiladas Suizas", "https://emprendesoft.com/wp-content/uploads/2017/06/enchiladas-suizas.jpg", 22, new String[]{"milk", "eggs", "fish", "crustaceans", "peanut"}));
+        foods.add(new Food("Enchiladas Suizas", "https://emprendesoft.com/wp-content/uploads/2017/06/enchiladas-suizas.jpg", 22, new String[]{"milk", "eggs"}));
+        foods.add(new Food("Pozole", "https://emprendesoft.com/wp-content/uploads/2017/06/pozole.jpg", 10, new String[]{"peanut"}));
         //--
 
         //-- Set adapter  --
@@ -46,7 +47,48 @@ public class MenuFragment extends Fragment {
         mRecyclerView.setAdapter(adapter);
         //--
 
+        //--now OnClickListener Setup --
+        adapter.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                int position = mRecyclerView.getChildAdapterPosition(v);
+            }
+        });
+        //--
+
         return mView;
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
