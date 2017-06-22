@@ -1,5 +1,6 @@
 package com.emprendesoft.easyservice.fragment;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -10,12 +11,15 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -34,12 +38,9 @@ public class TableDetailFragment extends Fragment {
 
     ListView listView = null;
     CustomAdapter customAdapter = null;
-
-
+    Tables mTables = null;
     private int tableIndex = 0;
     private Table mTable = null;
-    Tables mTables = null;
-
     private ActionBar mActionBar = null;
 
     @Override
@@ -58,7 +59,7 @@ public class TableDetailFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_table_detail, container, false);
 
         //-- Toolbar title with table number from arguments --
-        mActionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+        mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         TextView txtTitle = (TextView) getActivity().findViewById(R.id.toolbar_title);
 
         mActionBar.setTitle("Platos");
@@ -84,6 +85,17 @@ public class TableDetailFragment extends Fragment {
 
         listView = (ListView) root.findViewById(R.id.list_table_detail);
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+
+                if (position != mTable.getOrders().size()) {
+
+                    askForTheNote(position);
+                }
+            }
+        });
+
         customAdapter = new CustomAdapter();
         listView.setAdapter(customAdapter);
 
@@ -103,6 +115,29 @@ public class TableDetailFragment extends Fragment {
         //--
 
         return root;
+    }
+
+    private void askForTheNote(final int position) {
+
+        final Food food = (Food) mTable.getOrders().get(position);
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+        alert.setTitle(food.getName());
+        alert.setMessage("Agregar nota:");
+        final EditText input = new EditText(getActivity());
+        alert.setView(input);
+        alert.setPositiveButton("Listo", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int whichButton) {
+                
+                food.setNote(input.getText().toString());
+                customAdapter.notifyDataSetChanged();
+            }
+
+        });
+        alert.setNegativeButton("Cancelar", null);
+        alert.show();
     }
 
     @Override
@@ -167,7 +202,7 @@ public class TableDetailFragment extends Fragment {
 
                 ImageView image = (ImageView) convertView.findViewById(R.id.custom_layout_table_detail__imageView);
                 TextView name = (TextView) convertView.findViewById(R.id.custom_layout_table_detail__name);
-                TextView note= (TextView) convertView.findViewById(R.id.custom_layout_table_detail__note);
+                TextView note = (TextView) convertView.findViewById(R.id.custom_layout_table_detail__note);
                 TextView price = (TextView) convertView.findViewById(R.id.custom_layout_table_detail__price);
 
                 Food food = (Food) mTable.getOrders().get(position);
@@ -181,11 +216,15 @@ public class TableDetailFragment extends Fragment {
 
                 name.setText(food.getName());
                 price.setText(String.format("$%.2f", food.getPrice()));
-                note.setText("Aquí van las notas");
+
+                if (food.getNote() != null) {
+                    note.setText(food.getNote());
+                } else {
+                    note.setText("Tap para agregar nota");
+                }
             }
 
             return convertView;
-
         }
     }
 }
