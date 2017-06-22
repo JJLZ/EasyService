@@ -2,14 +2,10 @@ package com.emprendesoft.easyservice.fragment;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -102,11 +98,6 @@ public class TableDetailFragment extends Fragment {
 
         // Enable back button
         mActionBar.setDisplayHomeAsUpEnabled(true);
-
-        // Color back button
-        final Drawable upArrow = ContextCompat.getDrawable(getActivity(), R.drawable.abc_ic_ab_back_material);
-        upArrow.setColorFilter(Color.parseColor("#FFFFFF"), PorterDuff.Mode.SRC_ATOP);
-        mActionBar.setHomeAsUpIndicator(upArrow);
         //--
 
         listView = (ListView) root.findViewById(R.id.list_table_detail);

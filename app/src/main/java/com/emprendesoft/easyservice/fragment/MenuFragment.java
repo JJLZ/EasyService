@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -25,6 +28,7 @@ public class MenuFragment extends Fragment {
     public static final String ARG_TABLE_INDEX = "com.emprendesoft.easyservice.MenuFragment.ARG_TABLE_INDEX";
 
     private RecyclerView mRecyclerView;
+    private ActionBar mActionBar = null;
     private View mView;
     private int tableIndex;
     Tables mTables = null;
@@ -33,6 +37,9 @@ public class MenuFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Enable back button
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -40,6 +47,12 @@ public class MenuFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         mView = inflater.inflate(R.layout.fragment_menu, container, false);
+
+        //-- Toolbar setup --
+        mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        mActionBar.setTitle("Menu");
+        mActionBar.setDisplayHomeAsUpEnabled(true);
+        //--
 
         mRecyclerView = (RecyclerView) mView.findViewById(R.id.fragment_menu__recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -79,6 +92,23 @@ public class MenuFragment extends Fragment {
         //--
 
         return mView;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case android.R.id.home:
+
+                getActivity().finish();
+                return true;
+
+            default:
+                break;
+        }
+
+        return false;
     }
 
     private void exitFromMenu() {
