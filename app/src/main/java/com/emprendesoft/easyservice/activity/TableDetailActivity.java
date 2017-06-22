@@ -3,7 +3,10 @@ package com.emprendesoft.easyservice.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.Menu;
+import android.view.MenuItem;
 
+import com.emprendesoft.easyservice.R;
 import com.emprendesoft.easyservice.fragment.TableDetailFragment;
 
 public class TableDetailActivity extends FragmentContainerActivity {
@@ -43,6 +46,20 @@ public class TableDetailActivity extends FragmentContainerActivity {
                 this.tableIndex = data.getIntExtra(MenuActivity.EXTRA_TABLE_INDEX, 0);
             }
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+
+        getMenuInflater().inflate(R.menu.menu_orders, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
     }
 }
 

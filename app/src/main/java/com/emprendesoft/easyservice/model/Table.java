@@ -7,7 +7,6 @@ public class Table implements Serializable {
 
     private int number;
     private LinkedList orders;
-    private float check;
 
     public Table(int number) {
 
@@ -27,10 +26,6 @@ public class Table implements Serializable {
     public void addOrder(Food food) {
 
         this.orders.add(food);
-    }
-
-    public int getNumber() {
-        return number;
     }
 
     public float getCheck() {

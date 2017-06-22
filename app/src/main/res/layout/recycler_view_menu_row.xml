@@ -32,7 +32,7 @@
             android:adjustViewBounds="true"
             android:contentDescription="Imagen del platillo o bebida"
 
-            tools:src="@drawable/enchiladas_suizas"
+            tools:src="@drawable/food_placeholder"
             />
 
         <TextView

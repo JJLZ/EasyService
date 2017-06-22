@@ -31,6 +31,8 @@ import com.emprendesoft.easyservice.model.Table;
 import com.emprendesoft.easyservice.model.Tables;
 import com.squareup.picasso.Picasso;
 
+import java.util.LinkedList;
+
 public class TableDetailFragment extends Fragment {
 
     public static final String ARG_TABLE_INDEX = "com.emprendesoft.easyservice.TableDetailFragment.ARG_TABLE_INDEX";
@@ -49,6 +51,30 @@ public class TableDetailFragment extends Fragment {
 
         // Enable back button
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case R.id.action_clear_table:
+
+                mTable.setOrders(new LinkedList());
+                customAdapter.notifyDataSetChanged();
+
+                return true;
+
+            case android.R.id.home:
+
+                getActivity().finish();
+                return true;
+
+            default:
+                break;
+        }
+
+        return false;
     }
 
     @Nullable
@@ -130,7 +156,7 @@ public class TableDetailFragment extends Fragment {
 
             @Override
             public void onClick(DialogInterface dialog, int whichButton) {
-                
+
                 food.setNote(input.getText().toString());
                 customAdapter.notifyDataSetChanged();
             }
@@ -147,20 +173,6 @@ public class TableDetailFragment extends Fragment {
         customAdapter.notifyDataSetChanged();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        boolean superValue = super.onOptionsItemSelected(item);
-
-        // Enable back button
-        if (item.getItemId() == android.R.id.home) {
-
-            getActivity().finish();
-
-            return true;
-        }
-
-        return superValue;
-    }
 
     class CustomAdapter extends BaseAdapter {
 
