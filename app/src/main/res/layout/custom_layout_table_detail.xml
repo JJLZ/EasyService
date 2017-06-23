@@ -30,6 +30,7 @@
         android:layout_toRightOf="@+id/custom_layout_table_detail__imageView"
         android:text="TextView"
         android:textSize="22sp"
+        android:textColor="@color/black"
         android:textAlignment="center"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"

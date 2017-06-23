@@ -36,9 +36,4 @@ public class Tables {
 
         return mTables.get(index);
     }
-
-    public int getCount() {
-
-        return mTables.size();
-    }
 }

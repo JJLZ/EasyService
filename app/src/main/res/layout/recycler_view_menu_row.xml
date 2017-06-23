@@ -47,7 +47,8 @@
 
             android:paddingStart="8dp"
             android:textAlignment="center"
-            android:textSize="18sp"
+            android:textSize="20sp"
+            android:textColor="@color/black"
             android:paddingLeft="8dp"
 
             tools:text="Enchiladas suizas"
@@ -82,7 +83,6 @@
 
             android:textSize="18sp"
             android:textAlignment="center"
-            android:background="#FF7776"
 
             tools:background="#FF7776"
             />

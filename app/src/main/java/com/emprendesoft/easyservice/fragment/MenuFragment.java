@@ -2,6 +2,7 @@ package com.emprendesoft.easyservice.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -13,13 +14,21 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.emprendesoft.easyservice.R;
 import com.emprendesoft.easyservice.activity.MenuActivity;
 import com.emprendesoft.easyservice.adapter.MenuRecyclerViewAdapter;
 import com.emprendesoft.easyservice.model.Food;
+import com.emprendesoft.easyservice.model.Menu;
 import com.emprendesoft.easyservice.model.Tables;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.LinkedList;
 
 
@@ -31,8 +40,9 @@ public class MenuFragment extends Fragment {
     private ActionBar mActionBar = null;
     private View mView;
     private int tableIndex;
-    Tables mTables = null;
-    LinkedList<Food> menuFoods = new LinkedList<>();
+    private Tables mTables = null;
+    private Menu mMenu = null;
+    private ProgressBar mProgressBar = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,6 +57,10 @@ public class MenuFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         mView = inflater.inflate(R.layout.fragment_menu, container, false);
+
+        //-- ProgressBar --
+        mProgressBar = (ProgressBar) mView.findViewById(R.id.fragment_menu__progress_bar);
+        //--
 
         //-- Toolbar setup --
         mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
@@ -66,13 +80,27 @@ public class MenuFragment extends Fragment {
         }
         //--
 
-        //--now Fake Data --
-        menuFoods.add(new Food("Enchiladas Suizas", "https://emprendesoft.com/wp-content/uploads/2017/06/enchiladas-suizas.jpg", 22, new String[]{"milk", "eggs"}));
-        menuFoods.add(new Food("Pozole", "https://emprendesoft.com/wp-content/uploads/2017/06/pozole.jpg", 10, new String[]{"peanut"}));
+        //--now ?? --
+        mMenu = Menu.getInstance();
+        if (mMenu.getFoods().size() == 0) {
+
+            //-- Download data from server --
+            String strURL = getString(R.string.menu_url);
+            new DownloadMenuTask().execute(strURL);
+            //--
+        } else {
+
+            recyclerViewSetup();
+        }
         //--
 
+        return mView;
+    }
+
+    private void recyclerViewSetup() {
+
         //-- Set adapter  --
-        MenuRecyclerViewAdapter adapter = new MenuRecyclerViewAdapter(menuFoods);
+        MenuRecyclerViewAdapter adapter = new MenuRecyclerViewAdapter(mMenu.getFoods());
         mRecyclerView.setAdapter(adapter);
         //--
 
@@ -83,15 +111,13 @@ public class MenuFragment extends Fragment {
             public void onClick(View v) {
 
                 int position = mRecyclerView.getChildAdapterPosition(v);
-                Food food = menuFoods.get(position);
+                Food food = mMenu.getFoods().get(position);
                 mTables.getTable(tableIndex).addOrder(food);
 
                 exitFromMenu();
             }
         });
         //--
-
-        return mView;
     }
 
     @Override
@@ -118,6 +144,87 @@ public class MenuFragment extends Fragment {
 
         getActivity().setResult(Activity.RESULT_OK, intent);
         getActivity().finish();
+    }
+
+    private LinkedList<Food> downloadMenu(String strURL) {
+
+        URL url;
+        InputStream input;
+
+        try {
+            url = new URL(strURL);
+
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.connect();
+            byte data[] = new byte[1024];
+            int downloadedBytes;
+            input = con.getInputStream();
+
+            StringBuilder sb = new StringBuilder();
+            while ((downloadedBytes = input.read(data)) != -1) {
+                sb.append(new String(data, 0, downloadedBytes));
+            }
+
+            // Analizamos los datos para convertirlos de JSON a algo que podamos manejar en código
+            JSONObject jsonRoot = new JSONObject(sb.toString());
+            JSONArray list = jsonRoot.getJSONArray("foods");
+
+            // Nos descargamos todos los días de la predicción
+            LinkedList<Food> foods = new LinkedList<>();
+
+            for (int i = 0; i < list.length(); i++) {
+
+                JSONObject item = list.getJSONObject(i);
+
+                String name = item.getString("name");
+                String urlImage = item.getString("image");
+                String[] allergens = item.getString("allergens").split("\\s*,\\s*");
+                float price = (float) item.getDouble("price");
+
+                Food food = new Food(name, urlImage, price, allergens);
+                foods.add(food);
+            }
+
+            //-- How do a delay --
+            Thread.sleep(2000);
+            //--
+
+            return foods;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return null;
+    }
+
+    private class DownloadMenuTask extends AsyncTask<String, Integer, LinkedList<Food>> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            //-- Progressbar --
+            mProgressBar.setVisibility(View.VISIBLE);
+            //--
+        }
+
+        @Override
+        protected LinkedList<Food> doInBackground(String... params) {
+
+            return downloadMenu(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(LinkedList<Food> foods) {
+            super.onPostExecute(foods);
+
+            mMenu.setFoods(foods);
+            recyclerViewSetup();
+            //-- Progressbar --
+            mProgressBar.setVisibility(View.GONE);
+            //--
+        }
     }
 }
 

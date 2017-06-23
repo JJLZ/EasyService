@@ -12,6 +12,7 @@
         android:layout_height="50dp"
 
         android:textSize="20sp"
+        android:textColor="@color/black"
         android:gravity="center"
 
         tools:text="Total: $50.00"
