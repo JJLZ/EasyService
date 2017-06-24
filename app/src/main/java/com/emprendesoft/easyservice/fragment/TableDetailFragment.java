@@ -32,7 +32,7 @@ import java.util.LinkedList;
 public class TableDetailFragment extends Fragment {
 
     public static final String ARG_TABLE_INDEX = "com.emprendesoft.easyservice.TableDetailFragment.ARG_TABLE_INDEX";
-    public static final int REQUEST_TABLE_INDEX = 1;
+    private static int mInitialTableIndex = 0;
 
     ListView listView = null;
     CustomAdapter customAdapter = null;
@@ -40,6 +40,7 @@ public class TableDetailFragment extends Fragment {
     private int tableIndex = 0;
     private Table mTable = null;
     private ActionBar mActionBar = null;
+    private TextView mTextViewTitle = null;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,6 +74,25 @@ public class TableDetailFragment extends Fragment {
         return false;
     }
 
+    public static TableDetailFragment newInstance(int initialTable) {
+
+        TableDetailFragment fragment = new TableDetailFragment();
+
+        Bundle arguments = new Bundle();
+        arguments.putInt(ARG_TABLE_INDEX, initialTable);
+
+        fragment.setArguments(arguments);
+
+        return fragment;
+    }
+
+    public void moveToTable(int index) {
+
+        mTable = mTables.getTable(index);
+        customAdapter.notifyDataSetChanged();
+        mTextViewTitle.setText(mTable.toString());
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -82,18 +102,18 @@ public class TableDetailFragment extends Fragment {
 
         //-- Toolbar title with table number from arguments --
         mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        TextView txtTitle = (TextView) getActivity().findViewById(R.id.toolbar_title);
+        mTextViewTitle = (TextView) getActivity().findViewById(R.id.toolbar_title);
 
         mActionBar.setTitle("Platos");
 
         //-- Get table index from Argument --
         if (getArguments() != null) {
 
-            tableIndex = getArguments().getInt(ARG_TABLE_INDEX, 0);
+            tableIndex = getArguments().getInt(ARG_TABLE_INDEX, mInitialTableIndex);
             mTables = Tables.getInstance();
             mTable = mTables.getTable(tableIndex);
 
-            txtTitle.setText(mTable.toString());
+            mTextViewTitle.setText(mTable.toString());
         }
 
         // Enable back button

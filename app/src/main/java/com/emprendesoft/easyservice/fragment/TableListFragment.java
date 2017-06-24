@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,10 +51,19 @@ public class TableListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Intent intent = new Intent(getActivity(), TableDetailActivity.class);
-                intent.putExtra(TableDetailActivity.EXTRA_TABLE_INDEX, position);
+                FragmentManager fm = getFragmentManager();
+                TableDetailFragment tableDetailFragment = (TableDetailFragment) fm.findFragmentById(R.id.table_detail_container);
 
-                startActivity(intent);
+                if (tableDetailFragment != null) {
+
+                    tableDetailFragment.moveToTable(position);
+                } else {
+
+                    Intent intent = new Intent(getActivity(), TableDetailActivity.class);
+                    intent.putExtra(TableDetailActivity.EXTRA_TABLE_INDEX, position);
+
+                    startActivity(intent);
+                }
             }
         });
 

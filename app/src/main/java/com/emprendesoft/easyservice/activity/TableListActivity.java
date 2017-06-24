@@ -1,16 +1,41 @@
 package com.emprendesoft.easyservice.activity;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
+import com.emprendesoft.easyservice.R;
+import com.emprendesoft.easyservice.fragment.TableDetailFragment;
 import com.emprendesoft.easyservice.fragment.TableListFragment;
 
-public class TableListActivity extends FragmentContainerActivity {
+public class TableListActivity extends AppCompatActivity {
 
     @Override
-    protected Fragment createFragment() {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-        TableListFragment fragment = new TableListFragment();
+        setContentView(R.layout.activity_table_list);
 
-        return fragment;
+        setSupportActionBar((Toolbar) findViewById(R.id.toolBar));
+
+        FragmentManager fm = getSupportFragmentManager();
+
+        if (findViewById(R.id.list_container) != null) {
+            Fragment listFragment = fm.findFragmentById(R.id.list_container);
+            if (listFragment == null) {
+                listFragment = new TableListFragment();
+                fm.beginTransaction().add(R.id.list_container, listFragment).commit();
+            }
+        }
+        if (findViewById(R.id.table_detail_container) != null) {
+            Fragment tableDetailFragment = fm.findFragmentById(R.id.table_detail_container);
+            if (tableDetailFragment == null) {
+                tableDetailFragment = TableDetailFragment.newInstance(0);
+                fm.beginTransaction().add(R.id.table_detail_container, tableDetailFragment).commit();
+            }
+        }
     }
 }
