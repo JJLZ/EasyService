@@ -101,6 +101,7 @@ public class TableDetailFragment extends Fragment {
         mTable = mTables.getTable(index);
         customAdapter.notifyDataSetChanged();
         mTextViewTitle.setText(mTable.toString());
+        tableIndex = index;
     }
 
     @Nullable

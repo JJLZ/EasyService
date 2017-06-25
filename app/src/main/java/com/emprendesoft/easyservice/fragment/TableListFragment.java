@@ -91,13 +91,6 @@ public class TableListFragment extends Fragment {
         return root;
     }
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//
-//        customAdapter.notifyDataSetChanged();
-//    }
-
     class CustomAdapter extends BaseAdapter {
 
         @Override
