@@ -23,6 +23,7 @@ public class TableListActivity extends AppCompatActivity {
 
         FragmentManager fm = getSupportFragmentManager();
 
+        // For phone and tablet
         if (findViewById(R.id.list_container) != null) {
             Fragment listFragment = fm.findFragmentById(R.id.list_container);
             if (listFragment == null) {
@@ -30,11 +31,13 @@ public class TableListActivity extends AppCompatActivity {
                 fm.beginTransaction().add(R.id.list_container, listFragment).commit();
             }
         }
+
+        // For tablet landscape only
         if (findViewById(R.id.table_detail_container) != null) {
             Fragment tableDetailFragment = fm.findFragmentById(R.id.table_detail_container);
             if (tableDetailFragment == null) {
                 tableDetailFragment = TableDetailFragment.newInstance(0);
-                fm.beginTransaction().add(R.id.table_detail_container, tableDetailFragment).commit();
+                fm.beginTransaction().add(R.id.table_detail_container, tableDetailFragment, "DETAIL").commit();
             }
         }
     }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -44,6 +45,18 @@ public class MenuFragment extends Fragment {
     private Menu mMenu = null;
     private ProgressBar mProgressBar = null;
 
+    public static MenuFragment newInstance(int tableIndex) {
+
+        MenuFragment fragment = new MenuFragment();
+
+        Bundle arguments = new Bundle();
+        arguments.putInt(ARG_TABLE_INDEX, tableIndex);
+
+        fragment.setArguments(arguments);
+
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +93,7 @@ public class MenuFragment extends Fragment {
         }
         //--
 
-        //--now ?? --
+        //-- Get Menu --
         mMenu = Menu.getInstance();
         if (mMenu.getFoods().size() == 0) {
 
@@ -139,11 +152,20 @@ public class MenuFragment extends Fragment {
 
     private void exitFromMenu() {
 
-        Intent intent = new Intent();
-        intent.putExtra(MenuActivity.EXTRA_TABLE_INDEX, tableIndex);
+        if (getActivity().findViewById(R.id.table_detail_container) != null) {  // table landscape
 
-        getActivity().setResult(Activity.RESULT_OK, intent);
-        getActivity().finish();
+            FragmentManager fm = getActivity().getSupportFragmentManager();
+            Fragment tableDetailFragment = TableDetailFragment.newInstance(tableIndex);
+            fm.beginTransaction().replace(R.id.table_detail_container, tableDetailFragment).commit();
+        }
+        else {  // phone
+
+            Intent intent = new Intent();
+            intent.putExtra(MenuActivity.EXTRA_TABLE_INDEX, tableIndex);
+
+            getActivity().setResult(Activity.RESULT_OK, intent);
+            getActivity().finish();
+        }
     }
 
     private LinkedList<Food> downloadMenu(String strURL) {

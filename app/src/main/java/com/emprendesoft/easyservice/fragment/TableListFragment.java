@@ -36,7 +36,7 @@ public class TableListFragment extends Fragment {
         final ListView list = (ListView) root.findViewById(R.id.list_tables);
 
         // Adapter with table list
-        ArrayAdapter<Table> adapter = new ArrayAdapter<Table>(
+        ArrayAdapter<Table> adapter = new ArrayAdapter<>(
 
                 getActivity(),
                 android.R.layout.simple_list_item_1,
@@ -51,12 +51,22 @@ public class TableListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                FragmentManager fm = getFragmentManager();
-                TableDetailFragment tableDetailFragment = (TableDetailFragment) fm.findFragmentById(R.id.table_detail_container);
+                if (getActivity().findViewById(R.id.table_detail_container) != null) {
 
-                if (tableDetailFragment != null) {
+                    FragmentManager fm = getFragmentManager();
+                    Fragment fragment = fm.findFragmentById(R.id.table_detail_container);
+                    String className = fragment.getClass().getSimpleName();
 
-                    tableDetailFragment.moveToTable(position);
+                    if (className.equals(TableDetailFragment.class.getSimpleName())) {
+
+                        TableDetailFragment tableDetailFragment = (TableDetailFragment) fm.findFragmentById(R.id.table_detail_container);
+                        tableDetailFragment.moveToTable(position);
+
+                    } else if (className.equals(MenuFragment.class.getSimpleName())) {
+
+                        Fragment tableDetailFragment = TableDetailFragment.newInstance(position);
+                        fm.beginTransaction().replace(R.id.table_detail_container, tableDetailFragment, "DETAIL").commit();
+                    }
                 } else {
 
                     Intent intent = new Intent(getActivity(), TableDetailActivity.class);

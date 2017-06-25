@@ -6,10 +6,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +51,13 @@ public class TableDetailFragment extends Fragment {
 
         // Enable back button
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        getActivity().getMenuInflater().inflate(R.menu.menu_orders, menu);
     }
 
     @Override
@@ -104,7 +114,14 @@ public class TableDetailFragment extends Fragment {
         mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         mTextViewTitle = (TextView) getActivity().findViewById(R.id.toolbar_title);
 
-        mActionBar.setTitle("Platos");
+        // Using in tablet
+        if (getActivity().findViewById(R.id.table_detail_container) != null) {
+            mActionBar.setDisplayHomeAsUpEnabled(false);
+            mActionBar.setTitle("");
+        } else {    // Using in phone
+            mActionBar.setDisplayHomeAsUpEnabled(true);
+            mActionBar.setTitle("Platos");
+        }
 
         //-- Get table index from Argument --
         if (getArguments() != null) {
@@ -115,10 +132,6 @@ public class TableDetailFragment extends Fragment {
 
             mTextViewTitle.setText(mTable.toString());
         }
-
-        // Enable back button
-        mActionBar.setDisplayHomeAsUpEnabled(true);
-        //--
 
         listView = (ListView) root.findViewById(R.id.list_table_detail);
 
@@ -142,11 +155,25 @@ public class TableDetailFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                //-- Open Menu Activity --
-                Intent intent = new Intent(getActivity(), MenuActivity.class);
-                intent.putExtra(MenuActivity.EXTRA_TABLE_INDEX, tableIndex);
-                startActivityForResult(intent, 1);
-                //--
+                // Open Menu Screen
+
+                // We are using a table in landscape
+                if (getActivity().findViewById(R.id.table_detail_container) != null)
+                {
+                    //-- Replace table detail fragment with menu fragment --
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    Fragment menuFragment = MenuFragment.newInstance(tableIndex);
+                    fm.beginTransaction().replace(R.id.table_detail_container, menuFragment, "MENU").commit();
+                    //--
+                }
+                else  // We are using a phone
+                {
+                    //-- Open Menu Activity --
+                    Intent intent = new Intent(getActivity(), MenuActivity.class);
+                    intent.putExtra(MenuActivity.EXTRA_TABLE_INDEX, tableIndex);
+                    startActivityForResult(intent, 1);
+                    //--
+                }
             }
         });
         //--
