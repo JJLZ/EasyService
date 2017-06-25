@@ -11,21 +11,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.emprendesoft.easyservice.R;
 import com.emprendesoft.easyservice.activity.TableDetailActivity;
-import com.emprendesoft.easyservice.model.Table;
 import com.emprendesoft.easyservice.model.Tables;
 
 public class TableListFragment extends Fragment {
 
     public Tables mTables = null;
+    private ListView listView = null;
+    private CustomAdapter customAdapter = null;
     private ActionBar mActionBar = null;
     private TextView mTextViewTitle = null;
-
 
     @Nullable
     @Override
@@ -45,28 +45,20 @@ public class TableListFragment extends Fragment {
         }
         // --
 
-        // Create table list
+        // Create table listView
         mTables = Tables.getInstance();
 
         // inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_table_list, container, false);
 
         // create ListView
-        final ListView list = (ListView) root.findViewById(R.id.list_tables);
+        listView = (ListView) root.findViewById(R.id.list_tables);
 
-        // Adapter with table list
-        ArrayAdapter<Table> adapter = new ArrayAdapter<>(
-
-                getActivity(),
-                android.R.layout.simple_list_item_1,
-                mTables.getTables()
-        );
-
-        // set the adapter to the list
-        list.setAdapter(adapter);
+        customAdapter = new CustomAdapter();
+        listView.setAdapter(customAdapter);
 
         // Set listener to detected items selected
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
@@ -97,6 +89,43 @@ public class TableListFragment extends Fragment {
         });
 
         return root;
+    }
+
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//
+//        customAdapter.notifyDataSetChanged();
+//    }
+
+    class CustomAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+
+            return mTables.getTables().size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            convertView = getActivity().getLayoutInflater().inflate(R.layout.custom_layout_table_list_row, null);
+
+            TextView table = (TextView) convertView.findViewById(R.id.custom_layout_table_list_row__table_number);
+            table.setText(mTables.getTable(position).toString());
+
+            return convertView;
+        }
     }
 }
 

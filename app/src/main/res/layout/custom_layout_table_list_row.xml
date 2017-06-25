@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/custom_layout_table_list_row__table_number"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:textSize="17sp"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:gravity="center"
+
+        tools:background="#FABADA"
+        tools:text="Mesa No. 1"
+        />
+
+</RelativeLayout>

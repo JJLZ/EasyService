@@ -222,10 +222,6 @@ public class MenuFragment extends Fragment {
                 foods.add(food);
             }
 
-            //-- How do a delay --
-            Thread.sleep(2000);
-            //--
-
             return foods;
 
         } catch (Exception ex) {

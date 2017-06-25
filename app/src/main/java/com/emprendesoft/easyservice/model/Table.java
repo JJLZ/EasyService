@@ -46,6 +46,6 @@ public class Table implements Serializable {
     @Override
     public String toString() {
 
-        return  "Mesa No. " + Integer.toString(this.number + 1);
+        return  String.format("Mesa No. %02d", (number + 1));
     }
 }
