@@ -110,17 +110,17 @@ public class TableDetailFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_table_detail, container, false);
 
-        //-- Toolbar title with table number from arguments --
+        //-- Toolbar Setup --
         mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        mActionBar.setTitle("");
         mTextViewTitle = (TextView) getActivity().findViewById(R.id.toolbar_title);
+        // --
 
-        // Using in tablet
-        if (getActivity().findViewById(R.id.table_detail_container) != null) {
+        // Back button
+        if (getActivity().findViewById(R.id.table_detail_container) != null) {  // Tablet
             mActionBar.setDisplayHomeAsUpEnabled(false);
-            mActionBar.setTitle("");
-        } else {    // Using in phone
+        } else {    // Phone
             mActionBar.setDisplayHomeAsUpEnabled(true);
-            mActionBar.setTitle("Platos");
         }
 
         //-- Get table index from Argument --

@@ -16,12 +16,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.emprendesoft.easyservice.R;
 import com.emprendesoft.easyservice.activity.MenuActivity;
 import com.emprendesoft.easyservice.adapter.MenuRecyclerViewAdapter;
 import com.emprendesoft.easyservice.model.Food;
 import com.emprendesoft.easyservice.model.Menu;
+import com.emprendesoft.easyservice.model.Table;
 import com.emprendesoft.easyservice.model.Tables;
 
 import org.json.JSONArray;
@@ -44,6 +46,7 @@ public class MenuFragment extends Fragment {
     private Tables mTables = null;
     private Menu mMenu = null;
     private ProgressBar mProgressBar = null;
+    private TextView mTextViewTitle = null;
 
     public static MenuFragment newInstance(int tableIndex) {
 
@@ -77,8 +80,15 @@ public class MenuFragment extends Fragment {
 
         //-- Toolbar setup --
         mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        mActionBar.setTitle("Menu");
-        mActionBar.setDisplayHomeAsUpEnabled(true);
+        mActionBar.setTitle("");
+        mTextViewTitle = (TextView) getActivity().findViewById(R.id.toolbar_title);
+
+        // Back button
+        if (getActivity().findViewById(R.id.table_detail_container) != null) {  // Tablet
+            mActionBar.setDisplayHomeAsUpEnabled(false);
+        } else {    // Phone
+            mActionBar.setDisplayHomeAsUpEnabled(true);
+        }
         //--
 
         mRecyclerView = (RecyclerView) mView.findViewById(R.id.fragment_menu__recycler_view);
@@ -90,6 +100,11 @@ public class MenuFragment extends Fragment {
         //-- Get Table from Argument --
         if (getArguments() != null) {
             tableIndex = getArguments().getInt(ARG_TABLE_INDEX);
+
+            //-- Title --
+            Table table = mTables.getTable(tableIndex);
+            mTextViewTitle.setText("Agregar a " + table.toString());
+            //--
         }
         //--
 

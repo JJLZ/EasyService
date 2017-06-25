@@ -5,12 +5,15 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.emprendesoft.easyservice.R;
 import com.emprendesoft.easyservice.activity.TableDetailActivity;
@@ -20,11 +23,27 @@ import com.emprendesoft.easyservice.model.Tables;
 public class TableListFragment extends Fragment {
 
     public Tables mTables = null;
+    private ActionBar mActionBar = null;
+    private TextView mTextViewTitle = null;
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+
+        //-- Toolbar Setup --
+        mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        mActionBar.setTitle("");
+        mTextViewTitle = (TextView) getActivity().findViewById(R.id.toolbar_title);
+
+        // Title
+        if (getActivity().findViewById(R.id.table_detail_container) != null) {  // Tablet
+            mTextViewTitle.setText("");
+        } else {    // Phone
+            mTextViewTitle.setText("Seleccione Mesa");
+        }
+        // --
 
         // Create table list
         mTables = Tables.getInstance();
