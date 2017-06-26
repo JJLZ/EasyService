@@ -20,7 +20,8 @@ The objective is for the student to put into practice the knowledge acquired dur
 10. Organization and clarity of the code.
 
 ### Used tools:
-* Android Stuido 2.2.3
-* java
+* Android Stuido v2.2.3
+* java v1.8.0_131
+* Dependencies: Picasso v2.5.2
 * Git
 * [http://www.mocky.io/]()
